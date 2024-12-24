@@ -1,0 +1,26 @@
+services:
+  photositest.api:
+    image: ${DOCKER_REGISTRY-}photositestapi
+    container_name: photositest.api
+    build:
+      context: .
+      dockerfile: src/PhotoSiTest.API/Dockerfile
+    depends_on:
+      - photositest.db
+    ports:
+      - 5069:5000
+
+  photositest.db:
+    image: postgres:latest
+    container_name: photositest-db
+    environment:
+      - POSTGRES_DB=photositest
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  dbdata:

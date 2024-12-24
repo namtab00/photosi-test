@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PhotoSiTest.Contracts\PhotoSiTest.Contracts.csproj" />
+    <ProjectReference Include="..\PhotoSiTest.Common\PhotoSiTest.Common.csproj" />
+  </ItemGroup>
+
+</Project>
