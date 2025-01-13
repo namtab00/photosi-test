@@ -31,7 +31,7 @@ public class SampleDataSeeder(IServiceProvider serviceProvider, ILogger<SampleDa
             var categoryService = serviceProvider.GetRequiredService<IProductCategoryService>();
             var productService = serviceProvider.GetRequiredService<IProductService>();
             var orderService = serviceProvider.GetRequiredService<IOrderService>();
-            var userService = serviceProvider.GetRequiredService<IUserService>();
+            var userService = serviceProvider.GetRequiredService<IUserServiceProxy>();
 
             await SeedUsers(userService, ct);
             await SeedAddresses(addressService, ct);
@@ -132,20 +132,20 @@ public class SampleDataSeeder(IServiceProvider serviceProvider, ILogger<SampleDa
     }
 
 
-    private async Task SeedUsers(IUserService userService, CancellationToken ct)
+    private async Task SeedUsers(IUserServiceProxy userServiceProxy, CancellationToken ct)
     {
         for (var i = 0; i < _options.UsersCount; i++)
         {
             var user = new CreateUserDto($"user{i}@example.com", $"FirstName{i}", $"LastName{i}");
 
-            var existingUser = await userService.GetUserByEmailAsync(user.Email, ct);
+            var existingUser = await userServiceProxy.GetUserByEmailAsync(user.Email, ct);
             if (existingUser != null)
             {
                 logger.LogInformation("Skipping seed of existing user with email {Email}", user.Email);
                 continue;
             }
 
-            var result = await userService.CreateUserAsync(user, ct);
+            var result = await userServiceProxy.CreateUserAsync(user, ct);
             _users.Add((result.Id, user.Email));
             logger.LogInformation("Seeded user: {Email}", user.Email);
         }

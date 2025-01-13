@@ -18,8 +18,8 @@ public class AddressServiceTests : ServiceTestBase
     public AddressServiceTests()
     {
         _addressRepository = Substitute.For<IAddressRepository>();
-        _userService = Substitute.For<IUserService>();
-        _addressService = new AddressService(_addressRepository, _userService, Mapper);
+        _userServiceProxy = Substitute.For<IUserServiceProxy>();
+        _addressService = new AddressService(_addressRepository, _userServiceProxy, Mapper);
     }
 
 
@@ -27,7 +27,7 @@ public class AddressServiceTests : ServiceTestBase
 
     private readonly IAddressRepository _addressRepository;
 
-    private readonly IUserService _userService;
+    private readonly IUserServiceProxy _userServiceProxy;
 
 
     protected override void ConfigureMapper(IMapperConfigurationExpression config)
@@ -50,7 +50,7 @@ public class AddressServiceTests : ServiceTestBase
         // Arrange
         var createDto = new CreateAddressDto(Guid.NewGuid(), "via Tal dei Tali 1, Roma");
 
-        _userService.FindUserAsync(Arg.Any<Guid>()).Returns((UserDto?)null);
+        _userServiceProxy.FindUserAsync(Arg.Any<Guid>()).Returns((UserDto?)null);
 
         // Act & Assert
         var exception = await Should.ThrowAsync<InvalidEntityReferenceException>(async () => await _addressService.CreateAddressAsync(createDto));
@@ -66,7 +66,7 @@ public class AddressServiceTests : ServiceTestBase
         var userId = Guid.NewGuid();
         var createDto = new CreateAddressDto(userId, "via Tal dei Tali 1, Roma");
 
-        _userService.FindUserAsync(userId, Arg.Any<CancellationToken>()).Returns(new UserDto(userId, "test@test.com", "Test", "User"));
+        _userServiceProxy.FindUserAsync(userId, Arg.Any<CancellationToken>()).Returns(new UserDto(userId, "test@test.com", "Test", "User"));
 
         _addressRepository.GetListAsync().Returns(new List<Address>());
         _addressRepository.AddAsync(Arg.Any<Address>()).Returns(x => x.Arg<Address>());

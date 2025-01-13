@@ -1,21 +1,16 @@
-using Microsoft.Extensions.Configuration;
-using PhotoSiTest.Addresses.Extensions;
-using PhotoSiTest.API.Extensions.Swagger;
-using PhotoSiTest.API.HostedServices;
 using PhotoSiTest.Common.Data;
 using PhotoSiTest.Common.Exceptions;
 using PhotoSiTest.Common.Options;
-using PhotoSiTest.Orders.Extensions;
-using PhotoSiTest.Products.Extensions;
+using PhotoSiTest.Users.API.Extensions.Swagger;
 using PhotoSiTest.Users.Extensions;
 
-namespace PhotoSiTest.API.Extensions;
+namespace PhotoSiTest.Users.API.Extensions;
 
 public static class ServiceCollectionExtensions
 {
     public static WebApplicationBuilder ConfigureApplicationBuilder(this WebApplicationBuilder builder)
     {
-        builder.Services.AddApplicationServices(builder.Environment, builder.Configuration);
+        builder.Services.AddApplicationServices(builder.Configuration);
         return builder;
     }
 
@@ -56,35 +51,16 @@ public static class ServiceCollectionExtensions
     }
 
 
-    private static void AddApplicationServices(this IServiceCollection services,
-        IHostEnvironment hostEnvironment, IConfiguration configuration)
+    private static void AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOptions<PostgresOptions>()
             .Configure<IConfiguration>((options, conf) => conf.GetRequiredSection(PostgresOptions.ConfigSectionName).Bind(options));
 
-        services.AddSeeding()
-            .AddSwaggerServices()
-            .AddProductsService(configuration)
-            .AddAddressesService(configuration)
-            .AddOrdersService(configuration)
-            .AddUsersProxy(hostEnvironment)
-            .AddEndpointsApiExplorer();
+        services.AddSwaggerServices().AddUsersDomainService(configuration).AddEndpointsApiExplorer();
 
         services.AddControllers();
 
         services.AddExceptionHandler<CustomExceptionHandler>();
         services.AddProblemDetails();
-    }
-
-
-    private static IServiceCollection AddSeeding(this IServiceCollection services)
-    {
-        services.AddOptions<DataSeedingOptions>()
-            .Configure<IConfiguration>((options, conf) => conf.GetRequiredSection(DataSeedingOptions.ConfigSectionName).Bind(options));
-
-        services.AddScoped<IDataSeeder, SampleDataSeeder>();
-        services.AddHostedService<DataSeederHostedService>();
-
-        return services;
     }
 }

@@ -8,11 +8,11 @@ using PhotoSiTest.Contracts.Domain.Users;
 
 namespace PhotoSiTest.Addresses.Services;
 
-public class AddressService(IAddressRepository addressRepository, IUserService userService, IMapper mapper) : IAddressService
+public class AddressService(IAddressRepository addressRepository, IUserServiceProxy userServiceProxy, IMapper mapper) : IAddressService
 {
     public async Task<AddressDto> CreateAddressAsync(CreateAddressDto dto, CancellationToken ct = default)
     {
-        _ = await userService.FindUserAsync(dto.UserId, ct) ?? throw new InvalidEntityReferenceException("User", dto.UserId);
+        _ = await userServiceProxy.FindUserAsync(dto.UserId, ct) ?? throw new InvalidEntityReferenceException("User", dto.UserId);
 
         var address = mapper.Map<Address>(dto);
 

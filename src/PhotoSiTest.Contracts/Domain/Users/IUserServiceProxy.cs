@@ -2,7 +2,7 @@ using PhotoSiTest.Contracts.Domain.Users.Dtos;
 
 namespace PhotoSiTest.Contracts.Domain.Users;
 
-public interface IUserService
+public interface IUserServiceProxy
 {
     Task<UserDto> CreateUserAsync(CreateUserDto dto, CancellationToken ct = default);
 

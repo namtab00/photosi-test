@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using PhotoSiTest.Contracts.Domain.Orders.Dtos;
-using PhotoSiTest.Contracts.Domain.Users;
 using PhotoSiTest.Contracts.Domain.Users.Dtos;
+using PhotoSiTest.Users.Services;
 
-namespace PhotoSiTest.API.Controllers;
+namespace PhotoSiTest.Users.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController(IUserServiceProxy userServiceProxy) : ControllerBase
+public class UsersController(IUserDomainService userService) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(OrderDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UserDto>> Create(CreateUserDto dto, CancellationToken ct = default)
     {
-        var result = await userServiceProxy.CreateUserAsync(dto, ct);
+        var result = await userService.CreateUserAsync(dto, ct);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
@@ -24,19 +24,19 @@ public class UsersController(IUserServiceProxy userServiceProxy) : ControllerBas
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
     {
-        await userServiceProxy.DeleteUserAsync(id, ct);
+        await userService.DeleteUserAsync(id, ct);
         return NoContent();
     }
 
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserDto>>> GetAll(CancellationToken ct = default) => Ok(await userServiceProxy.GetAllUsersAsync(ct));
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetAll(CancellationToken ct = default) => Ok(await userService.GetAllUsersAsync(ct));
 
 
     [HttpGet("by-email")]
     public async Task<ActionResult<UserDto>> GetByEmail([FromQuery] string email, CancellationToken ct = default)
     {
-        var user = await userServiceProxy.GetUserByEmailAsync(email, ct);
+        var user = await userService.GetUserByEmailAsync(email, ct);
         return user == null ? NotFound() : Ok(user);
     }
 
@@ -44,7 +44,7 @@ public class UsersController(IUserServiceProxy userServiceProxy) : ControllerBas
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<UserDto>> GetById(Guid id, CancellationToken ct = default)
     {
-        var result = await userServiceProxy.GetUserAsync(id, ct);
+        var result = await userService.GetUserAsync(id, ct);
         return Ok(result);
     }
 
@@ -52,7 +52,7 @@ public class UsersController(IUserServiceProxy userServiceProxy) : ControllerBas
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<UserDto>> Update(Guid id, UpdateUserDto dto, CancellationToken ct = default)
     {
-        var result = await userServiceProxy.UpdateUserAsync(id, dto, ct);
+        var result = await userService.UpdateUserAsync(id, dto, ct);
         return Ok(result);
     }
 }

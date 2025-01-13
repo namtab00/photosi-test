@@ -14,7 +14,7 @@ namespace PhotoSiTest.Orders.Services;
 public class OrderService(
     IOrderRepository orderRepository,
     IMapper mapper,
-    IUserService userService,
+    IUserServiceProxy userServiceProxy,
     IAddressService addressService,
     IProductService productService) : IOrderService
 {
@@ -40,7 +40,7 @@ public class OrderService(
 
     public async Task<OrderDto> CreateOrderAsync(CreateOrderDto dto, CancellationToken ct = default)
     {
-        var user = await userService.FindUserAsync(dto.UserId, ct) ?? throw new InvalidEntityReferenceException("User", dto.UserId);
+        var user = await userServiceProxy.FindUserAsync(dto.UserId, ct) ?? throw new InvalidEntityReferenceException("User", dto.UserId);
 
         var address = await addressService.FindAddressAsync(dto.DeliveryAddressId, ct)
                       ?? throw new InvalidEntityReferenceException("Address", dto.DeliveryAddressId);
@@ -100,7 +100,7 @@ public class OrderService(
     public async Task<OrderDto> UpdateOrderAsync(Guid id, UpdateOrderDto dto, CancellationToken ct = default)
     {
         var existingOrder = await orderRepository.GetByIdAsync(id, ct) ?? throw new EntityNotFoundException<Order>(id);
-        var user = await userService.FindUserAsync(dto.UserId, ct) ?? throw new InvalidEntityReferenceException("User", dto.UserId);
+        var user = await userServiceProxy.FindUserAsync(dto.UserId, ct) ?? throw new InvalidEntityReferenceException("User", dto.UserId);
 
         var address = await addressService.FindAddressAsync(dto.DeliveryAddressId, ct)
                       ?? throw new InvalidEntityReferenceException("Address", dto.DeliveryAddressId);

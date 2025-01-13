@@ -11,16 +11,16 @@ using Shouldly;
 
 namespace PhotoSiTest.Users.Tests;
 
-public class UserServiceTests : ServiceTestBase
+public class UserDomainServiceTests : ServiceTestBase
 {
-    public UserServiceTests()
+    public UserDomainServiceTests()
     {
         _userRepository = Substitute.For<IUserRepository>();
-        _userService = new UserService(_userRepository, Mapper);
+        _userDomainService = new UserDomainService(_userRepository, Mapper);
     }
 
 
-    private readonly UserService _userService;
+    private readonly UserDomainService _userDomainService;
 
     private readonly IUserRepository _userRepository;
 
@@ -47,7 +47,7 @@ public class UserServiceTests : ServiceTestBase
 
         _userRepository.GetListAsync(Arg.Any<Expression<Func<User, bool>>?>()).Returns(new List<User> { existingUser });
 
-        await Should.ThrowAsync<InvalidOperationException>(() => _userService.CreateUserAsync(createDto));
+        await Should.ThrowAsync<InvalidOperationException>(() => _userDomainService.CreateUserAsync(createDto));
     }
 
 
@@ -59,7 +59,7 @@ public class UserServiceTests : ServiceTestBase
         _userRepository.GetListAsync().Returns(new List<User>());
         _userRepository.AddAsync(Arg.Any<User>()).Returns(x => x.Arg<User>());
 
-        var result = await _userService.CreateUserAsync(createDto);
+        var result = await _userDomainService.CreateUserAsync(createDto);
 
         result.ShouldNotBeNull();
         result.Email.ShouldBe(createDto.Email);

@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoSiTest.Tests.Common", 
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{15025CEC-D03B-4BE6-9B2A-3567D0E1C99B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoSiTest.Users.API", "src\PhotoSiTest.Users.API\PhotoSiTest.Users.API.csproj", "{B67400B4-DD61-4432-8F45-0C3557E089C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{15025CEC-D03B-4BE6-9B2A-3567D0E1C99B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15025CEC-D03B-4BE6-9B2A-3567D0E1C99B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15025CEC-D03B-4BE6-9B2A-3567D0E1C99B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B67400B4-DD61-4432-8F45-0C3557E089C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B67400B4-DD61-4432-8F45-0C3557E089C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B67400B4-DD61-4432-8F45-0C3557E089C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B67400B4-DD61-4432-8F45-0C3557E089C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,5 +131,6 @@ Global
 		{50516281-7EEA-45D2-A6DA-CE9989F1775B} = {B1FA2022-DC7E-4B98-8F86-1A44442F9C0C}
 		{5642E11B-A29B-476D-A0FE-68BF58699D75} = {B1FA2022-DC7E-4B98-8F86-1A44442F9C0C}
 		{05435CEE-0047-4054-BC36-FC1B09171FC1} = {B1FA2022-DC7E-4B98-8F86-1A44442F9C0C}
+		{B67400B4-DD61-4432-8F45-0C3557E089C3} = {97B9B25A-BCDE-4432-8EA0-8EEB28F08E61}
 	EndGlobalSection
 EndGlobal

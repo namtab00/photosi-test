@@ -1,12 +1,11 @@
 using AutoMapper;
-using PhotoSiTest.Contracts.Domain.Users;
 using PhotoSiTest.Contracts.Domain.Users.Dtos;
 using PhotoSiTest.Users.Domain;
 using PhotoSiTest.Users.Persistence;
 
 namespace PhotoSiTest.Users.Services;
 
-public class UserService(IUserRepository userRepository, IMapper mapper) : IUserService
+public class UserDomainService(IUserRepository userRepository, IMapper mapper) : IUserDomainService
 {
     public async Task<UserDto> CreateUserAsync(CreateUserDto dto, CancellationToken ct = default)
     {

@@ -22,10 +22,10 @@ public class OrderServiceTests : ServiceTestBase
     public OrderServiceTests()
     {
         _orderRepository = Substitute.For<IOrderRepository>();
-        _userService = Substitute.For<IUserService>();
+        _userServiceProxy = Substitute.For<IUserServiceProxy>();
         _addressService = Substitute.For<IAddressService>();
         _productService = Substitute.For<IProductService>();
-        _orderService = new OrderService(_orderRepository, Mapper, _userService, _addressService, _productService);
+        _orderService = new OrderService(_orderRepository, Mapper, _userServiceProxy, _addressService, _productService);
     }
 
 
@@ -39,7 +39,7 @@ public class OrderServiceTests : ServiceTestBase
 
     private readonly IOrderRepository _orderRepository;
 
-    private readonly IUserService _userService;
+    private readonly IUserServiceProxy _userServiceProxy;
 
     private readonly IAddressService _addressService;
 
@@ -120,7 +120,7 @@ public class OrderServiceTests : ServiceTestBase
         var userId = Guid.NewGuid();
         var createDto = new CreateOrderDto(UserId: userId, DeliveryAddressId: Guid.NewGuid());
 
-        _userService.FindUserAsync(userId).Returns(new UserDto(userId, "test@test.com", "Test", "User"));
+        _userServiceProxy.FindUserAsync(userId).Returns(new UserDto(userId, "test@test.com", "Test", "User"));
 
         _addressService.FindAddressAsync(createDto.DeliveryAddressId).Returns((AddressDto?)null);
 
@@ -138,7 +138,7 @@ public class OrderServiceTests : ServiceTestBase
         // Arrange
         var createDto = new CreateOrderDto(UserId: Guid.NewGuid(), DeliveryAddressId: Guid.NewGuid());
 
-        _userService.FindUserAsync(createDto.UserId).Returns((UserDto?)null);
+        _userServiceProxy.FindUserAsync(createDto.UserId).Returns((UserDto?)null);
 
         // Act & Assert
         var exception = await Should.ThrowAsync<InvalidEntityReferenceException>(async () => await _orderService.CreateOrderAsync(createDto));
@@ -157,7 +157,7 @@ public class OrderServiceTests : ServiceTestBase
 
         var createDto = new CreateOrderDto(UserId: userId, DeliveryAddressId: addressId);
 
-        _userService.FindUserAsync(userId).Returns(new UserDto(userId, "test@test.com", "Test", "User"));
+        _userServiceProxy.FindUserAsync(userId).Returns(new UserDto(userId, "test@test.com", "Test", "User"));
 
         _addressService.FindAddressAsync(addressId).Returns(new AddressDto(addressId, userId, "via Tal dei Tali 1, Roma"));
 

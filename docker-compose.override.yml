@@ -1,6 +1,12 @@
 services:
-  photositest.api:
+  photositest-api:
     environment:
-      - Postgres__ConnectionString=Host=photositest.db;Port=5432;Database=photositest;Username=postgres;Password=postgres;
+      - Postgres__ConnectionString=Host=photositest-db;Port=5432;Database=photositest;Username=postgres;Password=postgres;
+      - ServicesConfigOptions__UsersApiBaseUrl=http://photositest-user-api:5000/api
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5000
+  photositest-user-api:
+    environment:
+      - Postgres__ConnectionString=Host=photositest-db;Port=5432;Database=photositest;Username=postgres;Password=postgres;
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=5000
